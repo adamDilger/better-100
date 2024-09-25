@@ -1,0 +1,44 @@
+<script setup lang="ts">
+useSeoMeta({ title: "better 100" })
+</script>
+
+<template>
+	<h2 class="text-center text-2xl font-light pt-10 pb-8 mx-8">
+		Host your own <span class=""><s>hottest</s></span> better 100
+	</h2>
+
+	<div class="gap-5 px-8 text-center">
+		<ol class="list-decimal text-lg gap-4 list-inside mb-6">
+			<li>Create a better 100 code</li>
+			<li>Share the voting link</li>
+			<li>Wait for the voting to finish</li>
+			<li>Start the countdown</li>
+		</ol>
+
+		<div class="flex md:flex-row justify-center gap-6 flex-col mb-8">
+			<a href="/new">
+				<button class="bg-red-500 px-4 py-2 rounded border-red-700 text-red-50 font-bold">
+					Create a new code
+				</button>
+			</a>
+
+			<a href="/search">
+				<button class="bg-cyan-700 px-4 py-2 rounded border-red-700 text-cyan-50 font-bold">
+					Go to your Countdown
+				</button>
+			</a>
+		</div>
+
+		<hr />
+
+		<h3 class="mb-4 mt-6 font-bold">How is the countdown order decided?</h3>
+		<p class="mt-5">
+			Each vote (song) will be assigned a random number. This will decide the order of the countdown.
+		</p>
+
+		<h3 class="mb-4 mt-6 font-bold">Where do the songs come from?</h3>
+		<p class="mt-5 mb-6">
+			The voting page will allow you to select a song from YouTube
+		</p>
+	</div>
+</template>
