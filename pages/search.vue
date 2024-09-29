@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { FetchError } from "ofetch";
+
 const code = ref("");
+const codeChars = Array.from({ length: 4 });
+const charInputRefs = useTemplateRef<HTMLInputElement[]>("charInputRefs");
+
 const searching = ref(false);
 const error = ref<string | null>(null);
 
@@ -9,6 +13,11 @@ const router = useRouter();
 async function onSubmit() {
 	error.value = null;
 	searching.value = true;
+
+	code.value = charInputRefs
+		.value!.map((i) => i.value)
+		.join("")
+		.toUpperCase();
 
 	try {
 		await $fetch("/api/codes", { params: { code: code.value } });
@@ -19,6 +28,7 @@ async function onSubmit() {
 		if (e instanceof FetchError) {
 			if (e.status === 404) {
 				error.value = `Code ${code.value} not found`;
+				charInputRefs.value!.forEach((i) => (i.value = ""));
 				searching.value = false;
 				return;
 			}
@@ -33,6 +43,38 @@ async function onSubmit() {
 		searching.value = false;
 	}
 }
+
+function onInput(e: Event, i: number) {
+	const target = e.target as HTMLInputElement;
+	const value = target.value;
+
+	const inputs = charInputRefs.value;
+	if (!inputs || inputs.length === 0) {
+		throw new Error("No input refs found");
+	}
+
+	inputs[i].value = value.toUpperCase();
+
+	if (value.length > 0) {
+		if (i === codeChars.length - 1) {
+			inputs[i].blur();
+			onSubmit();
+		} else if (i < codeChars.length - 1) {
+			inputs[i + 1].focus();
+		}
+	}
+}
+
+function onBackspace(_: Event, i: number) {
+	if (i > 0) {
+		const inputs = charInputRefs.value;
+		if (!inputs || inputs.length === 0) {
+			throw new Error("No input refs found");
+		}
+
+		inputs[i - 1].focus();
+	}
+}
 </script>
 
 <template>
@@ -45,28 +87,18 @@ async function onSubmit() {
 			What's the code to your better 100 countdown?
 		</div>
 
-		<form
-			id="search-form"
-			@submit.prevent="onSubmit"
-			class="flex gap-2 mb-8 mx-8 items-center"
-		>
+		<div class="flex gap-2 mb-8 mx-8 justify-center">
 			<input
-				name="code"
-				placeholder="ABCD"
-				maxlength="4"
-				minlength="4"
-				class="p-2 rounded flex-1 border-2 border-gray-300"
-				v-model="code"
-			/>
-
-			<button
-				class="py-2 px-3 bg-cyan-700 active:bg-cyan-800 text-white disabled:bg-cyan-600/30 rounded"
-				type="submit"
+				v-for="(_, i) in codeChars"
+				ref="charInputRefs"
+				class="py-2 px-4 rounded border-2 border-gray-300"
+				size="1"
+				maxlength="1"
+				@input="(e) => onInput(e, i)"
+				@keydown.backspace="(e) => onBackspace(e, i)"
 				:disabled="searching"
-			>
-				{{ searching ? "Searching..." : "Search" }}
-			</button>
-		</form>
+			/>
+		</div>
 
 		<div v-if="error" class="bg-red-100 text-red-800 p-4 text-center">
 			{{ error }}

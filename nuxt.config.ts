@@ -16,7 +16,7 @@ export default defineNuxtConfig({
 			theme: {
 				extend: {
 					animation: {
-						border: "border 1s ease infinite",
+						border: "border 0.5s ease infinite",
 					},
 					keyframes: {
 						border: {

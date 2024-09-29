@@ -120,7 +120,7 @@ async function submitVotes() {
 	</div>
 
 	<div v-else class="flex flex-col pt-3 pb-5">
-		<h2 class="text-center font-light mb-6 text-sm">
+		<h2 class="text-center font-light mb-6 text-sm text-red-900/70">
 			{{ event.name }}
 		</h2>
 
@@ -129,10 +129,10 @@ async function submitVotes() {
 			class="flex gap-2 mb-8 mx-8 items-center"
 		>
 			<div
-				class="inline-block rounded-md bg-white bg-gradient-to-r bg-[length:400%_400%] p-[3px] w-full"
+				class="inline-block rounded-md bg-white bg-gradient-to-r bg-[length:200%_200%] p-[3px] w-full"
 				:class="{
-					'from-red-300 to-red-600 animate-border': searching,
-					'from-red-200 to-red-200 focus-within:from-red-300 focus-within:to-blue-200':
+					'from-red-400 to-amber-600 animate-border': searching,
+					'from-red-200 to-red-200 focus-within:from-red-300 focus-within:to-red-300':
 						!searching,
 				}"
 			>
