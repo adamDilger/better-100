@@ -1,5 +1,5 @@
 <script setup lang="ts">
-useSeoMeta({ title: "better 100" })
+useSeoMeta({ title: "better 100" });
 </script>
 
 <template>
@@ -17,13 +17,17 @@ useSeoMeta({ title: "better 100" })
 
 		<div class="flex md:flex-row justify-center gap-6 flex-col mb-8">
 			<a href="/new">
-				<button class="bg-red-500 px-4 py-2 rounded border-red-700 text-red-50 font-bold">
+				<button
+					class="bg-red-500 px-4 py-2 rounded border-red-700 text-red-50 font-bold"
+				>
 					Create a new code
 				</button>
 			</a>
 
 			<a href="/search">
-				<button class="bg-cyan-700 px-4 py-2 rounded border-red-700 text-cyan-50 font-bold">
+				<button
+					class="bg-cyan-700 px-4 py-2 rounded border-red-700 text-cyan-50 font-bold"
+				>
 					Go to your Countdown
 				</button>
 			</a>
@@ -33,7 +37,8 @@ useSeoMeta({ title: "better 100" })
 
 		<h3 class="mb-4 mt-6 font-bold">How is the countdown order decided?</h3>
 		<p class="mt-5">
-			Each vote (song) will be assigned a random number. This will decide the order of the countdown.
+			Each vote (song) will be assigned a random number. This will decide the
+			order of the countdown.
 		</p>
 
 		<h3 class="mb-4 mt-6 font-bold">Where do the songs come from?</h3>
