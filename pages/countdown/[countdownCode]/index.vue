@@ -42,7 +42,7 @@ const { data: played } = await useFetch(
 					<img :src="vote.thumbnailUrl" class="min-h-18" />
 
 					<div class="pl-4">
-						<div class="text-lg font-bold" v-html="vote.title"></div>
+						<div class="text-lg font-bold">{{ vote.title }}</div>
 						<div class="text-sm">{{ vote.voterName }}</div>
 					</div>
 				</div>

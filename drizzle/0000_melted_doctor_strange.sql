@@ -16,10 +16,10 @@ CREATE TABLE `vote` (
 	`id` integer PRIMARY KEY NOT NULL,
 	`countdownId` integer NOT NULL,
 	`personId` integer NOT NULL,
+	`spotifyId` text NOT NULL,
 	`title` text NOT NULL,
-	`videoId` text NOT NULL,
-	`thumbnailUrl` text NOT NULL,
-	`thumbnailLgUrl` text NOT NULL,
+	`artist` text NOT NULL,
+	`albumImageUrl` text NOT NULL,
 	`playedOn` text,
 	`count` integer,
 	`sort` integer

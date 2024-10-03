@@ -7,10 +7,10 @@ const votesSchema = z.object({
 	votes: z
 		.array(
 			z.object({
-				title: z.string(),
 				id: z.string(),
-				thumbnailUrl: z.string(),
-				thumbnailLgUrl: z.string(),
+				title: z.string(),
+				artist: z.string(),
+				albumImageUrl: z.string(),
 			}),
 		)
 		.nonempty()
@@ -27,26 +27,25 @@ export default defineEventHandler(async (event) => {
 
 	const countdown = await getCountdown(params.countdownCode!);
 	if (!countdown) {
-		return new Response(JSON.stringify({ message: "Countdown not found" }), {
+		throw createError({
+			message: "Countdown not found",
 			status: 404,
 		});
 	}
 
 	if (countdown.started) {
-		return new Response(
-			JSON.stringify({ message: "Voting has closed for this countdown" }),
-			{
-				status: 400,
-			},
-		);
+		throw createError({
+			message: "Voting has closed for this countdown",
+			status: 400,
+		});
 	}
 
 	const person = await db.insert(_Person).values({ name: body.name }).execute();
 	if (!person.lastInsertRowid) {
-		return new Response(
-			JSON.stringify({ message: "Failed to insert person" }),
-			{ status: 500 },
-		);
+		throw createError({
+			message: "Failed to insert person",
+			status: 500,
+		});
 	}
 
 	console.log(`created person ${body.name}: ${person.lastInsertRowid}`);
@@ -58,9 +57,12 @@ export default defineEventHandler(async (event) => {
 				sort: Math.floor(Math.random() * 1000000000),
 				personId: Number(person.lastInsertRowid),
 				countdownId: countdown.id,
+
+				spotifyId: v.id,
+				albumImageUrl: v.albumImageUrl,
 				title: v.title,
-				thumbnailUrl: v.thumbnailUrl,
-				thumbnailLgUrl: v.thumbnailLgUrl,
+				artist: v.artist,
+
 				videoId: v.id,
 				playedOn: null,
 			})),

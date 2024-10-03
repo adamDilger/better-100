@@ -24,10 +24,12 @@ export const _Vote = sqliteTable("vote", {
 	id: integer("id").primaryKey(),
 	countdownId: integer("countdownId").notNull(),
 	personId: integer("personId").notNull(),
+
+	spotifyId: text("spotifyId").notNull(),
 	title: text("title").notNull(),
-	videoId: text("videoId").notNull(),
-	thumbnailUrl: text("thumbnailUrl").notNull(),
-	thumbnailLgUrl: text("thumbnailLgUrl").notNull(),
+	artist: text("artist").notNull(),
+	albumImageUrl: text("albumImageUrl").notNull(),
+
 	playedOn: text("playedOn"),
 	count: integer("count"),
 	sort: integer("sort"),

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { debouncedWatch } from "@vueuse/core";
 import { _Countdown } from "~/db";
+import type { SearchItem } from "~/utils/types";
 
 const countdownCode = useRoute().params.countdownCode as string;
 const router = useRouter();
@@ -17,23 +18,16 @@ let nameInput: HTMLInputElement | undefined;
 const error = ref<string | null>(null);
 const searching = ref(false);
 const search = ref("");
-const votes = ref<Array<YoutubeItem>>([]);
+const votes = ref<Array<SearchItem>>([]);
 const votesConfirmed = ref(false);
 const submitting = ref(false);
 
 const name = ref("");
-const responseMessage = ref<Array<YoutubeItem> | null>(null);
+const responseMessage = ref<Array<SearchItem> | null>(null);
 
 debouncedWatch(search, () => doSearch(), {
 	debounce: 500,
 });
-
-type YoutubeItem = {
-	id: string;
-	title: string;
-	thumbnailUrl: string;
-	thumbnailLgUrl: string;
-};
 
 async function doSearch() {
 	if (search.value.length < 3) {
@@ -50,7 +44,7 @@ async function doSearch() {
 		searching.value = false;
 
 		if (response) {
-			responseMessage.value = response as any /* todo */;
+			responseMessage.value = response;
 		}
 	} catch (e) {
 		error.value = "Failed to search for songs";
@@ -59,7 +53,7 @@ async function doSearch() {
 	}
 }
 
-function addVote(i: YoutubeItem) {
+function addVote(i: SearchItem) {
 	votes.value = [...votes.value, { ...i }];
 	responseMessage.value = null;
 	search.value = "";
@@ -75,11 +69,15 @@ async function submitVotes() {
 	try {
 		await $fetch(`/api/countdowns/${countdownCode}/votes`, {
 			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
+			body: {
 				name: name.value,
-				votes: votes.value,
-			}),
+				votes: votes.value.map((v) => ({
+					id: v.id,
+					title: v.title,
+					artist: v.artist,
+					albumImageUrl: v.albumImageUrl,
+				})),
+			},
 		});
 	} catch (e) {
 		error.value = "Failed to submit votes";
@@ -140,6 +138,7 @@ async function submitVotes() {
 					type="text"
 					name="search"
 					placeholder="Song/artist..."
+					maxlength="50"
 					class="rounded outline-none p-2 w-full"
 					v-model="search"
 					autocomplete="off"
@@ -148,17 +147,23 @@ async function submitVotes() {
 		</div>
 
 		<div v-if="responseMessage" class="mx-2 divide-y divide-gray-300 relative">
+			<div v-if="responseMessage.length === 0" class="text-center">
+				No results
+			</div>
 			<div
 				v-for="i in responseMessage"
 				class="flex items-center space-between bg-white/80"
 			>
 				<div class="flex items-center flex-1">
 					<img
-						:src="i.thumbnailUrl"
+						:src="i.albumImageUrl"
 						style="max-width: 100px"
 						class="rounded-l p-3"
 					/>
-					<p class="pl-3 p-2" v-html="i.title"></p>
+					<div class="flex flex-col">
+						<p class="pl-3 mb-1">{{ i.title }}</p>
+						<p class="pl-3 text-xs font-bold text-gray-600">{{ i.artist }}</p>
+					</div>
 				</div>
 
 				<button

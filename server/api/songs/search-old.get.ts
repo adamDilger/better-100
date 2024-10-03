@@ -1,41 +1,24 @@
 import { decode } from "html-entities";
-import { SpotifyApi, Track } from "@spotify/web-api-ts-sdk";
-import { SearchItem } from "~/utils/types";
-
-const runtimeConfig = useRuntimeConfig();
-const sdk = SpotifyApi.withClientCredentials(
-	runtimeConfig.spotify.clientId,
-	runtimeConfig.spotify.clientSecret,
-);
 
 export default defineEventHandler(async (event) => {
 	const query = getQuery(event);
 	const search = query.search;
 
 	if (!search || Array.isArray(search) || typeof search !== "string") {
-		throw createError({
-			message: "No search term provided",
-			status: 400,
-		});
+		return new Response(
+			JSON.stringify({ message: "No search term provided" }),
+			{ status: 400 },
+		);
 	}
 
 	if (search.length > 50) {
-		throw createError({
-			message: "Search longer than 50 characters",
-			status: 400,
-		});
+		return new Response(
+			JSON.stringify({ message: "Search longer than 50 characters" }),
+			{ status: 400 },
+		);
 	}
 
-	const items = await sdk.search(search, ["track"]);
-
-	const data: SearchItem[] = items.tracks.items.map((i: Track) => ({
-		id: i.id,
-		title: i.name,
-		artist: i.artists.map((a) => a.name).join(", "),
-		album: i.album.name,
-		albumImageUrl: i.album.images[0].url,
-	}));
-
+	const data = await queryYoutube(search);
 	return data;
 });
 

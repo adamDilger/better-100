@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "86762e14-8ad2-435e-9b8f-12e57496b76b",
+  "id": "86239e11-a576-4ac9-9be8-bceee9a40cb7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "countdown": {
@@ -111,6 +111,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "spotifyId": {
+          "name": "spotifyId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "title": {
           "name": "title",
           "type": "text",
@@ -118,22 +125,15 @@
           "notNull": true,
           "autoincrement": false
         },
-        "videoId": {
-          "name": "videoId",
+        "artist": {
+          "name": "artist",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "thumbnailUrl": {
-          "name": "thumbnailUrl",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "thumbnailLgUrl": {
-          "name": "thumbnailLgUrl",
+        "albumImageUrl": {
+          "name": "albumImageUrl",
           "type": "text",
           "primaryKey": false,
           "notNull": true,

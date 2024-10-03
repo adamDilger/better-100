@@ -60,6 +60,7 @@ function onInput(e: Event, i: number) {
 			inputs[i].blur();
 			onSubmit();
 		} else if (i < codeChars.length - 1) {
+			inputs[i + 1].value = "";
 			inputs[i + 1].focus();
 		}
 	}

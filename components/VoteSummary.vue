@@ -1,16 +1,11 @@
 <script setup lang="ts">
-type YoutubeItem = {
-	id: string;
-	title: string;
-	thumbnailUrl: string;
-	thumbnailLgUrl: string;
-};
+import type { SearchItem } from "~/utils/types";
 
 defineProps<{
-	votes: Array<YoutubeItem>;
+	votes: Array<SearchItem>;
 	maxVoteCount: number;
 }>();
-const emit = defineEmits<{ remove: [YoutubeItem] }>();
+const emit = defineEmits<{ remove: [SearchItem] }>();
 </script>
 
 <template>
