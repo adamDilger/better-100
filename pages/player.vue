@@ -16,7 +16,6 @@ if (typeof window !== "undefined") {
 		const token =
 			"BQD-qAboxS3jsk_wi1Z6Rc-8f7kD3h-GqWhBi1yz0fXlWeJq6ykCvlLITz8HCB-doopcPpkEJKr15uXZ3trAGhdg4wqidc0_zc3fu97-Zw9nqwXW-IsTPylJdPdv9SZ3vnEsRsZl0ChGhNW8XR2KoWtWGUKdmxaR9kHTliPYYBG41pfAXh4hsmPxCD_LzbXaOYoAx5pQOdWyon05";
 
-		// @ts-ignore
 		player = new Spotify.Player({
 			name: "Better100 Countdown",
 			getOAuthToken: (cb: any) => {
@@ -96,17 +95,17 @@ function togglePlay() {
 		<img :src="currentTrack.album.images[0].url" />
 
 		<button
-			v-if="!isPaused"
+			v-if="isPaused"
 			@click="togglePlay"
 			class="px-4 py-1 my-4 bg-red-200"
 		>
 			Play
 		</button>
-		<button @click="togglePlay" class="px-4 py-1 my-4 bg-blue-200">
+		<button v-else @click="togglePlay" class="px-4 py-1 my-4 bg-blue-200">
 			Pause
 		</button>
 	</div>
 	<div v-else>
-		<div class="text-3xl text-center mt-5">Connect in spotify</div>
+		<div class="text-3xl text-center mt-5">Connect in your spotify app</div>
 	</div>
 </template>

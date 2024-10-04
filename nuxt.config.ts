@@ -8,6 +8,10 @@ export default defineNuxtConfig({
 
 		public: {
 			baseUrl: process.env.PUBLIC_BASE_URL,
+
+			spotify: {
+				clientId: process.env.SPOTIFY_CLIENT_ID,
+			},
 		},
 
 		spotify: {
