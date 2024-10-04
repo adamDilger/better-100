@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 		.select({
 			voterName: _Person.name,
 			title: _Vote.title,
-			thumbnailUrl: _Vote.thumbnailUrl,
+			albumImageUrl: _Vote.albumImageUrl,
 			count: _Vote.count,
 		})
 		.from(_Vote)

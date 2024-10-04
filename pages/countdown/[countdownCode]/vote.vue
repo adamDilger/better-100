@@ -2,6 +2,7 @@
 import { debouncedWatch } from "@vueuse/core";
 import { _Countdown } from "~/db";
 import type { SearchItem } from "~/utils/types";
+import { PlusIcon } from "@heroicons/vue/20/solid";
 
 const countdownCode = useRoute().params.countdownCode as string;
 const router = useRouter();
@@ -146,20 +147,17 @@ async function submitVotes() {
 			</div>
 		</div>
 
-		<div v-if="responseMessage" class="mx-2 divide-y divide-gray-300 relative">
+		<div v-if="responseMessage" class="mx-4 divide-y divide-gray-300 relative">
 			<div v-if="responseMessage.length === 0" class="text-center">
 				No results
 			</div>
 			<div
 				v-for="i in responseMessage"
+				:key="i.id"
 				class="flex items-center space-between bg-white/80"
 			>
 				<div class="flex items-center flex-1">
-					<img
-						:src="i.albumImageUrl"
-						style="max-width: 100px"
-						class="rounded-l p-3"
-					/>
+					<img :src="i.albumImageUrl" class="rounded-l p-3 size-24" />
 					<div class="flex flex-col">
 						<p class="pl-3 mb-1">{{ i.title }}</p>
 						<p class="pl-3 text-xs font-bold text-gray-600">{{ i.artist }}</p>
@@ -167,10 +165,10 @@ async function submitVotes() {
 				</div>
 
 				<button
-					class="bg-red-100 active:bg-red-200 text-red-800 mx-3 h-10 w-10 rounded-full"
+					class="bg-red-100 active:bg-red-200 text-red-800 mx-4 size-9 rounded-full flex items-center justify-center"
 					@click="addVote(i)"
 				>
-					+
+					<PlusIcon class="size-5" />
 				</button>
 			</div>
 		</div>

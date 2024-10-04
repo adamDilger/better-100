@@ -26,6 +26,31 @@ const { data: played } = await useFetch(
 				<div class="text-sm mx-12">
 					The countdown list will appear here when it's started.
 				</div>
+
+				<div class="text-center mt-8">
+					<p class="mb-4">
+						If you're trying to vote in the countown, you can go to the voting
+						screen here
+					</p>
+
+					<button
+						@click="$router.push(`/countdown/${countdownCode}/vote`)"
+						class="py-2 px-3 bg-cyan-700 active:bg-cyan-800 text-white disabled:bg-cyan-600/30 rounded"
+					>
+						Vote now
+					</button>
+				</div>
+
+				<div class="text-center mt-8">
+					<p class="mb-4">Is the voting finished?</p>
+
+					<button
+						@click="$router.push(`/countdown/${countdownCode}/countdown`)"
+						class="py-2 px-3 bg-red-600 active:bg-red-800 text-white disabled:bg-red-600/30 rounded"
+					>
+						Start countdown
+					</button>
+				</div>
 			</div>
 
 			<template v-else-if="played!.length === 0">
@@ -39,7 +64,7 @@ const { data: played } = await useFetch(
 						{{ vote.count }}
 					</div>
 
-					<img :src="vote.thumbnailUrl" class="min-h-18" />
+					<img :src="vote.albumImageUrl" class="min-h-18" />
 
 					<div class="pl-4">
 						<div class="text-lg font-bold">{{ vote.title }}</div>
