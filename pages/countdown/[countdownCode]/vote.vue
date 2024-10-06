@@ -16,7 +16,10 @@ if (event.started) {
 	navigateTo(`/countdown/${countdownCode}`);
 }
 
-useHead({ title: () => event.name });
+useHead({ title: () => `Voting for ${event.name}` });
+useSeoMeta({
+	ogTitle: () => `Voting for ${event.name} | better100`,
+});
 
 const MAX_VOTE_COUNT = event.maxVoteCount || 5;
 
