@@ -1,4 +1,6 @@
 <script setup lang="ts">
+useHead({ title: "New Countdown" });
+
 const maxVotes = ref(5);
 const countdownName = ref("");
 

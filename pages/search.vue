@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { FetchError } from "ofetch";
 
+useHead({ title: "Search for Countdown" });
+
 const CODE_LENGTH = 4;
 
 const code = ref("");

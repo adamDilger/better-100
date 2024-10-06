@@ -9,8 +9,14 @@ const router = useRouter();
 
 const event = await $fetch(`/api/countdowns/${countdownCode}`);
 if (!event) {
-	router.replace("/");
+	navigateTo(`/`);
 }
+
+if (event.started) {
+	navigateTo(`/countdown/${countdownCode}`);
+}
+
+useHead({ title: () => event.name });
 
 const MAX_VOTE_COUNT = event.maxVoteCount || 5;
 

@@ -27,14 +27,16 @@ export default defineEventHandler(async (event) => {
 		.where(isNotNull(_Vote.playedOn))
 		.orderBy(asc(_Vote.count));
 
-	const currentVote = await getCurrentVote(countdown.code);
-	if (currentVote) {
-		played.unshift({
-			voterName: currentVote.personName,
-			title: currentVote.title,
-			thumbnailUrl: currentVote.thumbnailUrl,
-			count: currentVote.count,
-		});
+	if (countdown.started) {
+		const currentVote = await getCurrentVote(countdown.code);
+		if (currentVote) {
+			played.unshift({
+				voterName: currentVote.personName,
+				title: currentVote.title,
+				thumbnailUrl: currentVote.thumbnailUrl,
+				count: currentVote.count,
+			});
+		}
 	}
 
 	// todo: if started, get current playing song

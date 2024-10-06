@@ -12,6 +12,8 @@ if (!countdown) {
 	router.replace("/");
 }
 
+useHead({ title: () => countdown.name });
+
 onMounted(() => {
 	const tag = document.createElement("script");
 	tag.src = "https://www.youtube.com/iframe_api";

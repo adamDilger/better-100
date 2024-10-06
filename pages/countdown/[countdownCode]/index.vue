@@ -5,9 +5,12 @@ const countdownCode = route.params.countdownCode as string;
 const { data: countdown, error: countdownError } = await useFetch(
 	`/api/countdowns/${countdownCode}`,
 );
+
 const { data: played } = await useFetch(
 	`/api/countdowns/${countdownCode}/played`,
 );
+
+useHead({ title: () => `${countdown.value?.name}` });
 </script>
 
 <template>

@@ -1,7 +1,3 @@
-<script setup lang="ts">
-useSeoMeta({ title: "better 100" });
-</script>
-
 <template>
 	<h2 class="text-center text-2xl font-light pt-10 pb-8 mx-8">
 		Host your own <span class=""><s>hottest</s></span> better 100
