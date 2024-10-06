@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const props = defineProps<{ countdownCode: string; token?: string }>();
+import { Spot } from "~/utils/spotify";
+
+const props = defineProps<{ countdownCode: string }>();
 
 const playerReady = ref(false);
 const countdownStarted = ref(false);
@@ -17,7 +19,23 @@ const currentTrack = ref({
 	artists: [{ name: "" }],
 });
 
+/*
+
+
+start
+	pause
+	empty queue
+	get song from list
+
+
+
+
+*/
+
 const voices = window.speechSynthesis.getVoices();
+
+const auth = JSON.parse(window.localStorage.getItem("spotify_auth")!);
+let spot: Spot | null = null;
 
 let player: {
 	addListener: (event: string, cb: (state: any) => void) => void;
@@ -32,7 +50,7 @@ function initPlayer() {
 	if (!(window as any).Spotify) return console.warn("Spotify not loaded");
 	if (player) return console.warn("Spotify player alread initialised ");
 
-	const token = props.token;
+	const token = auth.access_token;
 	console.log(token);
 
 	// @ts-expect-error Spotify is not defined
@@ -57,6 +75,7 @@ function initPlayer() {
 	player.addListener("ready", (e) => {
 		console.log("Ready with Device ID", e, e.device_id);
 		playerReady.value = true;
+		spot = new Spot(auth, e.device_id);
 	});
 
 	// Not Ready
@@ -107,7 +126,7 @@ async function firstSong() {
 		method: "POST",
 	});
 
-	update(data as any);
+	update(data);
 	countdownStarted.value = true;
 }
 
@@ -136,8 +155,10 @@ async function update(vote: PlayerVote) {
 	setTimeout(() => (changingVote.value = false), 1000);
 
 	await speakNumber(vote.count);
-	player.loadVideoById(vote.videoId);
+	enqueSong(vote);
 }
+
+function enqueSong(vote: PlayerVote) {}
 
 async function speakNumber(i: number) {
 	let msg = new SpeechSynthesisUtterance();
@@ -187,7 +208,11 @@ async function speakNumber(i: number) {
 				<div class="text-4xl font-bold text-red-500">{{ voteCount }}</div>
 			</div>
 
-			<div id="player" style="height: 80vh; width: 100%"></div>
+			<img
+				id="player"
+				style="height: 80vh; width: 100%"
+				:src="currentTrack.album.images[0].url"
+			/>
 			<p id="voted-by" class="text-center text-lg font-light mt-3">
 				Voted by {{ votePersonName }}
 			</p>

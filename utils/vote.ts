@@ -4,9 +4,8 @@ import { _Countdown, _Person, _Vote, db } from "~/db";
 export type PlayerVote = {
 	id: number;
 	title: string;
-	videoId: string;
-	thumbnailUrl: string;
-	thumbnailLgUrl: string;
+	spotifyId: string;
+	albumImageUrl: string;
 	personName: string;
 
 	count: number;
@@ -19,9 +18,8 @@ export async function getNextVote(
 		.select({
 			id: _Vote.id,
 			title: _Vote.title,
-			videoId: _Vote.videoId,
-			thumbnailUrl: _Vote.thumbnailUrl,
-			thumbnailLgUrl: _Vote.thumbnailLgUrl,
+			spotifyId: _Vote.spotifyId,
+			albumImageUrl: _Vote.albumImageUrl,
 			personName: _Person.name,
 		})
 		.from(_Vote)
