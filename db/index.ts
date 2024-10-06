@@ -11,6 +11,7 @@ export const _Countdown = sqliteTable("countdown", {
 	code: text("code").notNull().unique(),
 	name: text("name").notNull(),
 	started: text("started"),
+	finished: text("finished"),
 	maxVoteCount: integer("maxVoteCount").notNull().default(5),
 	password: text("password"),
 });

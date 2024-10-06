@@ -62,6 +62,14 @@ export async function markCountdownStarted(id: number) {
 		.run();
 }
 
+export async function markCountdownFinished(id: number) {
+	return db
+		.update(_Countdown)
+		.set({ finished: new Date().toISOString() })
+		.where(eq(_Countdown.id, id))
+		.run();
+}
+
 function makeCode(length = CODE_LENGTH) {
 	let result = "";
 	const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

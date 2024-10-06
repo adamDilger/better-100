@@ -1,14 +1,41 @@
 <script setup lang="ts">
 import { FetchError } from "ofetch";
 
+const CODE_LENGTH = 4;
+
 const code = ref("");
-const codeChars = Array.from({ length: 4 });
+const codeChars = Array.from({ length: CODE_LENGTH });
 const charInputRefs = useTemplateRef<HTMLInputElement[]>("charInputRefs");
 
 const searching = ref(false);
 const error = ref<string | null>(null);
 
 const router = useRouter();
+
+onMounted(() => document.body.addEventListener("paste", onPaste));
+onUnmounted(() => document.body.removeEventListener("paste", onPaste));
+
+function onPaste(e: ClipboardEvent) {
+	e.preventDefault();
+
+	const paste = e.clipboardData?.getData("text");
+	if (!paste || paste.length !== CODE_LENGTH) {
+		return;
+	}
+
+	const chars = paste.split("");
+
+	const inputs = charInputRefs.value;
+	if (!inputs || inputs.length === 0) {
+		throw new Error("No input refs found");
+	}
+
+	for (let i = 0; i < chars.length; i++) {
+		inputs[i].value = chars[i].toUpperCase();
+	}
+
+	onSubmit();
+}
 
 async function onSubmit() {
 	error.value = null;

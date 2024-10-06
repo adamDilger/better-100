@@ -8,6 +8,13 @@
       "when": 1727313223674,
       "tag": "0000_flashy_lionheart",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1728181695808,
+      "tag": "0001_clear_whizzer",
+      "breakpoints": true
     }
   ]
 }

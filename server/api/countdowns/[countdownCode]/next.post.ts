@@ -8,16 +8,14 @@ export default defineEventHandler(async (event) => {
 	const countdown = await getCountdown(code);
 	if (!countdown) {
 		throw createError({
-			statusCode: 404,
 			statusMessage: "Countdown not found",
+			statusCode: 404,
 		});
 	}
 
 	const vote = await getNextVote(countdown.code);
 	if (!vote) {
-		return new Response(JSON.stringify({ message: "No votes left" }), {
-			status: 404,
-		});
+		throw createError({ message: "No votes left", statusCode: 404 });
 	}
 
 	return vote;

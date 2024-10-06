@@ -1,0 +1,1 @@
+ALTER TABLE `countdown` ADD `finished` text;

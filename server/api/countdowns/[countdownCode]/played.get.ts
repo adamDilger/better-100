@@ -1,6 +1,7 @@
-import { desc, eq, isNotNull } from "drizzle-orm";
+import { asc, eq, isNotNull } from "drizzle-orm";
 import { _Person, _Vote, db } from "~/db";
 import { getCountdown } from "~/utils/countdown";
+import { getCurrentVote } from "~/utils/vote";
 
 export default defineEventHandler(async (event) => {
 	const params = getRouterParams(event);
@@ -24,7 +25,17 @@ export default defineEventHandler(async (event) => {
 		.from(_Vote)
 		.innerJoin(_Person, eq(_Person.id, _Vote.personId))
 		.where(isNotNull(_Vote.playedOn))
-		.orderBy(desc(_Vote.playedOn));
+		.orderBy(asc(_Vote.count));
+
+	const currentVote = await getCurrentVote(countdown.code);
+	if (currentVote) {
+		played.unshift({
+			voterName: currentVote.personName,
+			title: currentVote.title,
+			thumbnailUrl: currentVote.thumbnailUrl,
+			count: currentVote.count,
+		});
+	}
 
 	// todo: if started, get current playing song
 	return played;

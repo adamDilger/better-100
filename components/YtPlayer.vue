@@ -9,6 +9,8 @@ const votePersonName = ref("");
 
 const voices = window.speechSynthesis.getVoices();
 
+const router = useRouter();
+
 let player: YT.Player;
 (window as any).onYouTubeIframeAPIReady = initPlayer;
 onMounted(initPlayer);
@@ -43,8 +45,13 @@ async function onPlayerStateChange(event: YT.OnStateChangeEvent) {
 
 	if (event.data == YT.PlayerState.ENDED) {
 		console.log("video ended");
-		const nextVote = await markComplete();
-		update(nextVote);
+		try {
+			const nextVote = await markComplete();
+			update(nextVote);
+		} catch (e) {
+			router.replace(`/countdown/${props.countdownCode}`);
+			return;
+		}
 	}
 }
 
@@ -52,12 +59,17 @@ async function firstSong() {
 	await $fetch(`/api/countdowns/${props.countdownCode}/start`, {
 		method: "POST",
 	});
-	const data = await $fetch(`/api/countdowns/${props.countdownCode}/next`, {
-		method: "POST",
-	});
 
-	update(data as any);
-	countdownStarted.value = true;
+	try {
+		const data = await $fetch(`/api/countdowns/${props.countdownCode}/next`, {
+			method: "POST",
+		});
+		update(data as any);
+		countdownStarted.value = true;
+	} catch (e) {
+		router.replace(`/countdown/${props.countdownCode}`);
+		return;
+	}
 }
 
 async function markComplete(): Promise<PlayerVote> {
@@ -82,16 +94,26 @@ async function update(vote: PlayerVote) {
 	votePersonName.value = vote.personName;
 
 	changingVote.value = true;
-	setTimeout(() => (changingVote.value = false), 1000);
 
-	await speakNumber(vote.count);
-	player.loadVideoById(vote.videoId);
+	if (vote.playedOn && vote.count === 1) {
+		setTimeout(() => (changingVote.value = false), 3000);
+		player.loadVideoById(vote.videoId);
+		await speak(`Here it is again, your number ${vote.count}`);
+	} else {
+		setTimeout(() => (changingVote.value = false), 1000);
+		await speakNumber(vote.count);
+		player.loadVideoById(vote.videoId);
+	}
 }
 
-async function speakNumber(i: number) {
+function speakNumber(i: number) {
+	return speak(`Number ${i}`);
+}
+
+async function speak(text: string) {
 	let msg = new SpeechSynthesisUtterance();
 	msg.voice = voices[1];
-	msg.text = "Number " + i;
+	msg.text = text;
 	msg.lang = "en-US";
 
 	speechSynthesis.speak(msg);

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { debouncedWatch } from "@vueuse/core";
 import { _Countdown } from "~/db";
+import type { YoutubeItem } from "~/utils/types";
+import { PlusIcon } from "@heroicons/vue/20/solid";
 
 const countdownCode = useRoute().params.countdownCode as string;
 const router = useRouter();
@@ -27,13 +29,6 @@ const responseMessage = ref<Array<YoutubeItem> | null>(null);
 debouncedWatch(search, () => doSearch(), {
 	debounce: 500,
 });
-
-type YoutubeItem = {
-	id: string;
-	title: string;
-	thumbnailUrl: string;
-	thumbnailLgUrl: string;
-};
 
 async function doSearch() {
 	if (search.value.length < 3) {
@@ -78,7 +73,12 @@ async function submitVotes() {
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
 				name: name.value,
-				votes: votes.value,
+				votes: votes.value.map((v) => ({
+					id: v.id,
+					title: v.title,
+					thumbnailUrl: v.thumbnailUrl,
+					thumbnailLgUrl: v.thumbnailLgUrl,
+				})),
 			}),
 		});
 	} catch (e) {
@@ -147,25 +147,27 @@ async function submitVotes() {
 			</div>
 		</div>
 
-		<div v-if="responseMessage" class="mx-2 divide-y divide-gray-300 relative">
+		<div v-if="responseMessage" class="mx-4 divide-y divide-gray-300 relative">
+			<div v-if="responseMessage.length === 0" class="text-center">
+				No results
+			</div>
 			<div
 				v-for="i in responseMessage"
+				:key="i.id"
 				class="flex items-center space-between bg-white/80"
 			>
 				<div class="flex items-center flex-1">
-					<img
-						:src="i.thumbnailUrl"
-						style="max-width: 100px"
-						class="rounded-l p-3"
-					/>
-					<p class="pl-3 p-2" v-html="i.title"></p>
+					<img :src="i.thumbnailUrl" class="rounded-l p-3 size-24" />
+					<div class="flex flex-col">
+						<p class="pl-3" v-html="i.title"></p>
+					</div>
 				</div>
 
 				<button
-					class="bg-red-100 active:bg-red-200 text-red-800 mx-3 h-10 w-10 rounded-full"
+					class="bg-red-100 active:bg-red-200 text-red-800 mx-4 size-9 rounded-full flex items-center justify-center"
 					@click="addVote(i)"
 				>
-					+
+					<PlusIcon class="size-5" />
 				</button>
 			</div>
 		</div>

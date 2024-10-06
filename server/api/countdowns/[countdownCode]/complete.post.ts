@@ -1,5 +1,5 @@
-import { getCountdown } from "~/utils/countdown";
-import { getNextVote, markComplete } from "~/utils/vote";
+import { getCountdown, markCountdownFinished } from "~/utils/countdown";
+import { getNextVote, getNumberOne, markComplete } from "~/utils/vote";
 
 export default defineEventHandler(async (event) => {
 	const params = getRouterParams(event);
@@ -15,8 +15,9 @@ export default defineEventHandler(async (event) => {
 
 	const voteToComplete = await getNextVote(countdown.code);
 	if (!voteToComplete) {
-		return new Response(JSON.stringify({ message: "No votes left" }), {
-			status: 404,
+		throw createError({
+			message: "No votes left",
+			statusCode: 404,
 		});
 	}
 
@@ -24,8 +25,16 @@ export default defineEventHandler(async (event) => {
 
 	const nextVote = await getNextVote(countdown.code);
 	if (!nextVote) {
-		return new Response(JSON.stringify({ message: "No votes left" }), {
-			status: 404,
+		if (!countdown.finished) {
+			// return number 1 again... as per
+			const currentVote = await getNumberOne(countdown.code);
+			await markCountdownFinished(countdown.id);
+			return currentVote;
+		}
+
+		throw createError({
+			message: "No votes left",
+			statusCode: 404,
 		});
 	}
 
