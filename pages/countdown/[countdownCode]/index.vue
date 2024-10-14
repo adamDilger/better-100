@@ -10,6 +10,14 @@ const { data: played } = await useFetch(
 	`/api/countdowns/${countdownCode}/played`,
 );
 
+const { data: voteCounts } = await useFetch(
+	`/api/countdowns/${countdownCode}/votes`,
+);
+
+const totalVoteCount = computed(() =>
+	voteCounts.value?.reduce((acc, curr) => acc + curr.voteCount, 0),
+);
+
 useHead({ title: () => `${countdown.value?.name}` });
 </script>
 
@@ -19,15 +27,31 @@ useHead({ title: () => `${countdown.value?.name}` });
 		<button @click="$router.push('/')">Back</button>
 	</div>
 	<template v-else>
-		<h2 class="text-center text-1xl font-light pt-10">{{ countdown?.name }}</h2>
+		<div class="pt-3 mb-4">
+			<h2 class="text-center font-light text-sm text-red-900/70">
+				{{ countdown?.name }}
+			</h2>
+		</div>
 
 		<div class="px-8">
 			<div v-if="!countdown?.started" class="text-center">
 				<div class="text-2xl font-light pt-8 pb-4 mb-4">
 					Countdown not started
 				</div>
-				<div class="text-sm mx-12">
+
+				<div class="text-sm mx-4 mb-8">
 					The countdown list will appear here when it's started.
+				</div>
+
+				<div>
+					<h3 class="text-xl font-bold">
+						Current vote count - {{ totalVoteCount }}
+					</h3>
+					<div class="flex flex-col gap-2 mt-2">
+						<div v-for="vote in voteCounts">
+							{{ vote.name }} - {{ vote.voteCount }} votes
+						</div>
+					</div>
 				</div>
 
 				<div class="text-center mt-8">
