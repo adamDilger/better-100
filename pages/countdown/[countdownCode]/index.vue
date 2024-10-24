@@ -85,17 +85,36 @@ useHead({ title: () => `${countdown.value?.name}` });
 				<div class="text-center text-2xl font-light pt-10 pb-4">TBD</div>
 			</template>
 
-			<div class="divide-y divide-red-200">
-				<div v-for="vote in played" class="flex items-center py-6">
-					<div class="text-4xl pr-6 font-bold text-red-500">
-						{{ vote.count }}
+			<div v-if="played && played.length">
+				<div class="flex items-center py-6 mb-8">
+					<div class="text-6xl pr-6 font-bold text-red-500">
+						{{ played[0].count }}
 					</div>
 
-					<img :src="vote.albumImageUrl" class="min-h-18" />
+					<div class="flex flex-col items-center">
+						<div class="mb-4">
+							<img :src="played[0].thumbnailUrl" class="h-24" />
+						</div>
 
-					<div class="pl-4">
-						<div class="text-lg font-bold" v-html="vote.title"></div>
-						<div class="text-sm">{{ vote.voterName }}</div>
+						<div class="pl-4 text-center">
+							<div class="text-lg font-bold" v-html="played[0].title"></div>
+							<div class="text-sm">{{ played[0].voterName }}</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="divide-y divide-red-200">
+					<div v-for="vote in played.slice(1)" class="flex items-center py-6">
+						<div class="text-4xl pr-6 font-bold text-red-500">
+							{{ vote.count }}
+						</div>
+
+						<img :src="vote.thumbnailUrl" class="h-12" />
+
+						<div class="pl-4">
+							<div class="text-lg font-bold" v-html="vote.title"></div>
+							<div class="text-sm">{{ vote.voterName }}</div>
+						</div>
 					</div>
 				</div>
 			</div>

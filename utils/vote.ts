@@ -135,16 +135,16 @@ export async function getNumberOne(
 	};
 }
 
-export async function markComplete(id: number) {
+export async function markComplete(countdownId: number, voteId: number) {
 	const currentCount = await db
 		.select({ count: count() })
 		.from(_Vote)
 		.innerJoin(_Countdown, eq(_Vote.countdownId, _Countdown.id))
-		.where(isNull(_Vote.playedOn));
+		.where(and(eq(_Countdown.id, countdownId), isNull(_Vote.playedOn)));
 
 	return db
 		.update(_Vote)
 		.set({ playedOn: new Date().toISOString(), count: currentCount[0].count })
-		.where(eq(_Vote.id, id))
+		.where(eq(_Vote.id, voteId))
 		.run();
 }

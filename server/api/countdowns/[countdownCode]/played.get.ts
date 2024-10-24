@@ -1,5 +1,5 @@
-import { asc, eq, isNotNull } from "drizzle-orm";
-import { _Person, _Vote, db } from "~/db";
+import { and, asc, eq, isNotNull } from "drizzle-orm";
+import { _Countdown, _Person, _Vote, db } from "~/db";
 import { getCountdown } from "~/utils/countdown";
 import { getCurrentVote } from "~/utils/vote";
 
@@ -24,7 +24,8 @@ export default defineEventHandler(async (event) => {
 		})
 		.from(_Vote)
 		.innerJoin(_Person, eq(_Person.id, _Vote.personId))
-		.where(isNotNull(_Vote.playedOn))
+		.innerJoin(_Countdown, eq(_Countdown.id, _Vote.countdownId))
+		.where(and(eq(_Countdown.id, countdown.id), isNotNull(_Vote.playedOn)))
 		.orderBy(asc(_Vote.count));
 
 	if (countdown.started) {

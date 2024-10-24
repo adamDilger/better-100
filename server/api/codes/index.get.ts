@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
 		.where(eq(_Countdown.code, code.toUpperCase()));
 
 	if (res.length === 0) {
-		return createError({ statusCode: 404, statusMessage: "Code not found" });
+		throw createError({ statusCode: 404, statusMessage: "Code not found" });
 	}
 
 	const data = res[0];

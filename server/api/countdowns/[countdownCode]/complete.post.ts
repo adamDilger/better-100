@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
 		});
 	}
 
-	await markComplete(voteToComplete.id);
+	await markComplete(countdown.id, voteToComplete.id);
 
 	const nextVote = await getNextVote(countdown.code);
 	if (!nextVote) {

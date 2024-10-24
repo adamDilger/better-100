@@ -27,26 +27,25 @@ export default defineEventHandler(async (event) => {
 
 	const countdown = await getCountdown(params.countdownCode!);
 	if (!countdown) {
-		return new Response(JSON.stringify({ message: "Countdown not found" }), {
-			status: 404,
+		throw createError({
+			message: "Countdown not found",
+			statusCode: 404,
 		});
 	}
 
 	if (countdown.started) {
-		return new Response(
-			JSON.stringify({ message: "Voting has closed for this countdown" }),
-			{
-				status: 400,
-			},
-		);
+		throw createError({
+			message: "Voting has closed for this countdown",
+			statusCode: 400,
+		});
 	}
 
 	const person = await db.insert(_Person).values({ name: body.name }).execute();
 	if (!person.lastInsertRowid) {
-		return new Response(
-			JSON.stringify({ message: "Failed to insert person" }),
-			{ status: 500 },
-		);
+		throw createError({
+			message: "Failed to insert person",
+			statusCode: 500,
+		});
 	}
 
 	console.log(`created person ${body.name}: ${person.lastInsertRowid}`);
@@ -67,5 +66,5 @@ export default defineEventHandler(async (event) => {
 		)
 		.execute();
 
-	return new Response(JSON.stringify({ message: "Votes submitted" }));
+	return { message: "Votes submitted" };
 });

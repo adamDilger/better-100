@@ -3,17 +3,17 @@ export default defineEventHandler(async (event) => {
 	const search = query.search;
 
 	if (!search || Array.isArray(search) || typeof search !== "string") {
-		return new Response(
-			JSON.stringify({ message: "No search term provided" }),
-			{ status: 400 },
-		);
+		throw createError({
+			message: "No search term provided",
+			status: 400,
+		});
 	}
 
 	if (search.length > 50) {
-		return new Response(
-			JSON.stringify({ message: "Search longer than 50 characters" }),
-			{ status: 400 },
-		);
+		throw createError({
+			message: "Search longer than 50 characters",
+			status: 400,
+		});
 	}
 
 	const data = await queryYoutube(search);

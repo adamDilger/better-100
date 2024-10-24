@@ -7,8 +7,9 @@ export default defineEventHandler(async (event) => {
 
 	const countdown = await getCountdown(params.countdownCode!);
 	if (!countdown) {
-		return new Response(JSON.stringify({ message: "Countdown not found" }), {
-			status: 404,
+		throw createError({
+			message: "Countdown not found",
+			statusCode: 404,
 		});
 	}
 
