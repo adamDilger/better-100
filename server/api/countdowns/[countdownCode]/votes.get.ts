@@ -20,6 +20,7 @@ export default defineEventHandler(async (event) => {
 		})
 		.from(_Vote)
 		.innerJoin(_Person, eq(_Vote.personId, _Person.id))
+		.where(eq(_Vote.countdownId, countdown.id))
 		.groupBy(_Person.id);
 
 	return results;
